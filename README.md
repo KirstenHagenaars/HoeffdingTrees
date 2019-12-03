@@ -1,2 +1,2 @@
 # Hoeffding Trees
-inspiriation: https://github.com/vitords/HoeffdingTree
+inspiration: https://github.com/vitords/HoeffdingTree
