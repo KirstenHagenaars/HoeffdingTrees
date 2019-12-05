@@ -1,4 +1,5 @@
 import pandas as pd
+from itertools import combinations
 import math
 import numpy as np
 import HTree
@@ -37,6 +38,29 @@ def determineLabels(array):  # Finds the different classes of an attribute
     return labels
 
 
+def allSplits(labels):
+    combis = []
+
+    for i in range(1, len(labels) + 1):
+        if i != len(labels)-1:
+            comb = combinations(labels, i)
+
+            for j in comb:
+                combine = [list(j)]
+                print(j)
+                partB = []
+                for label in labels:
+                    seen = False
+                    for p in j:
+                        if p == label:
+                            seen = True
+                    if not seen:
+                        partB.append(label)
+                combine.append(partB)
+                combis.append(combine)
+    return combis
+
+
 def countInstances(instances, attribute, labels):  # Counts the number of instances of diff.classes within an attribute
     counted = [0 for x in range(0, len(labels))]
 
@@ -71,6 +95,7 @@ def impurity(instances):
     gini = gini_index(len(instances), inClassA, inClassB)
 
     # Test all possible splits
+    splits = allSplits(classes)
 
     for attribute in instances.columns:
         labels = determineLabels(instances[attribute])
@@ -106,7 +131,11 @@ def main():
     labels = determineLabels(test["cap-shape"])
     print(labels)
     print("instances")
-    print(countInstances(test, "cap-shape", labels))
+    instances = countInstances(test, "cap-shape", labels)
+    print(instances)
+
+    print(allSplits(labels))
+
     # --------------------------------------
 
     # TODO Change input! range(0, 10) just for testing purposes
