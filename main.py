@@ -15,7 +15,7 @@ def load_data():
 
 def gini_index(total, inClassA, inClassB):
     gini = 1 - ((inClassA/total)^2 + (inClassB/total)^2)
-    if gini > 0 and gini < 1:
+    if 0 < gini < 1:
         return gini
     else:
         print("Gini index problem")
