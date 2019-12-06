@@ -37,12 +37,12 @@ def determineLabels(array):  # Finds the different classes of an attribute
             seen.append(label[1])
     return labels
 
-
+# TODO test/fix this function
 def allSplits(labels):
     combis = []
 
     for i in range(1, len(labels) + 1):
-        if i != len(labels)-1:
+        if i != len(labels)-1:      # Here?
             comb = combinations(labels, i)
 
             for j in comb:
@@ -74,28 +74,16 @@ def countInstances(instances, attribute, labels):  # Counts the number of instan
 
 
 # TODO finish function
-def impurity(instances):
-    global classes
-    inClassA, inClassB = 0, 0
+def impurity(instances, labels):    #labels off 'class', found in the main
 
     # TODO use countInstances here
     # Find number of instances of each class
-    for i in range(0, len(instances)):
-        if instances.iloc[i]["class"][1] == classes[0]:
-            inClassA = inClassA + 1
-        elif instances.iloc[i]["class"][1] == classes[1]:
-            inClassB = inClassB + 1
-        else:
-            print("Unexpected class in function impurity()")
-
-    print(inClassA)
-    print(inClassB)
+    counted = countInstances(instances, "class", labels)
 
     # Compute gini index
-    gini = gini_index(len(instances), inClassA, inClassB)
+    gini = gini_index(len(instances), counted[0], counted[1])
 
     # Test all possible splits
-    splits = allSplits(classes)
 
     for attribute in instances.columns:
         labels = determineLabels(instances[attribute])
@@ -134,7 +122,8 @@ def main():
     instances = countInstances(test, "cap-shape", labels)
     print(instances)
 
-    print(allSplits(labels))
+    # Something funky going on here
+    print(allSplits(['a', 'b', 'c', 'd', 'e', 'f', 'g']))
 
     # --------------------------------------
 
