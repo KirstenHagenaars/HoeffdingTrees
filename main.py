@@ -1,6 +1,6 @@
 import pandas as pd
 from itertools import combinations
-import math
+from math import ceil
 import numpy as np
 import HTree
 
@@ -16,7 +16,7 @@ def load_data():
 
 def gini_index(total, inClassA, inClassB):
     gini = 1 - ((inClassA / total) ** 2 + (inClassB / total) ** 2)
-    if 0 < gini < 1:
+    if 0 <= gini <= 1:
         return gini
     else:
         print("Gini index problem")
@@ -24,7 +24,7 @@ def gini_index(total, inClassA, inClassB):
 
 
 def determineLabels(array):  # Finds the different classes of an attribute
-    labels = []
+    #labels = []
     seen = []
 
     for label in array:
@@ -33,31 +33,29 @@ def determineLabels(array):  # Finds the different classes of an attribute
             if s == label[1]:
                 there = True
         if not there:
-            labels.append(label[1])
+            #labels.append(label[1])
             seen.append(label[1])
-    return labels
+    return seen #labels
 
-# TODO test/fix this function
+# TODO test/fix this function, it works for odd numbers of labels, there are duplicates when the nr of labels is even
 def allSplits(labels):
     combis = []
-
-    for i in range(1, len(labels) + 1):
-        if i != len(labels)-1:      # Here?
-            comb = combinations(labels, i)
-
-            for j in comb:
-                combine = [list(j)]
-                print(j)
-                partB = []
-                for label in labels:
-                    seen = False
-                    for p in j:
-                        if p == label:
-                            seen = True
-                    if not seen:
-                        partB.append(label)
-                combine.append(partB)
-                combis.append(combine)
+    #when the labels are ['x', 'b', 's', 'f'], we do not want [['x', 'b', 's', 'f'],[]] in combis since this is not a split, right?
+    for i in range(1, ceil((len(labels) + 1)/2)):
+        comb = combinations(labels, i)
+        for j in comb:
+            combine = [list(j)]
+            print(j)
+            partB = []
+            for label in labels:
+                seen = False
+                for p in j:
+                    if p == label:
+                        seen = True
+                if not seen:
+                    partB.append(label)
+            combine.append(partB)
+            combis.append(combine)
     return combis
 
 
@@ -99,13 +97,8 @@ def main():
     class_labels = data["class"]
     global classes
 
-    # TODO use determine labels here
-    for c in class_labels:
-        if len(classes) == 1 and classes[0] != c:
-            classes.append(c[1])
-            break
-        else:
-            classes.append(c[1])
+    classes = determineLabels(class_labels)
+    print(classes)
 
     classA = classes[0]
     classB = classes[1]
@@ -123,7 +116,9 @@ def main():
     print(instances)
 
     # Something funky going on here
-    print(allSplits(['a', 'b', 'c', 'd', 'e', 'f', 'g']))
+    print(allSplits(labels))
+
+    #print(allSplits(['a', 'b', 'c', 'd']))
 
     # --------------------------------------
 
