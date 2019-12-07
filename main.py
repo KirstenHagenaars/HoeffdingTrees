@@ -1,6 +1,7 @@
 import pandas as pd
 from itertools import combinations
 from math import ceil
+import math
 import numpy as np
 import HTree
 
@@ -24,7 +25,6 @@ def gini_index(total, inClassA, inClassB):
 
 
 def determineLabels(array):  # Finds the different classes of an attribute
-    #labels = []
     seen = []
 
     for label in array:
@@ -33,15 +33,15 @@ def determineLabels(array):  # Finds the different classes of an attribute
             if s == label[1]:
                 there = True
         if not there:
-            #labels.append(label[1])
             seen.append(label[1])
-    return seen #labels
+    return seen
+
 
 # TODO test/fix this function, it works for odd numbers of labels, there are duplicates when the nr of labels is even
 def allSplits(labels):
     combis = []
-    #when the labels are ['x', 'b', 's', 'f'], we do not want [['x', 'b', 's', 'f'],[]] in combis since this is not a split, right?
-    for i in range(1, ceil((len(labels) + 1)/2)):
+    # when the labels are ['x', 'b', 's', 'f'], we do not want [['x', 'b', 's', 'f'],[]] in combis since this is not a split, right?
+    for i in range(1, ceil((len(labels) + 1) / 2)):
         comb = combinations(labels, i)
         for j in comb:
             combine = [list(j)]
@@ -71,23 +71,42 @@ def countInstances(instances, attribute, labels):  # Counts the number of instan
     return counted
 
 
-# TODO finish function
-def impurity(instances, labels):    #labels off 'class', found in the main
+def updateBestGini(best, second_best, new):
+    if new[0] < best[0]:
+        return new, best
+    if new[0] < second_best[0]:
+        return best, new
+    else:
+        return best, second_best
 
-    # TODO use countInstances here
+
+def epsilon(n, R, delta):
+    return math.sqrt(pow(R, 2) * math.log1p(1 / delta) / 2 * n)
+
+
+# TODO finish function
+def impurity(instances, labels):  # labels off 'class', found in the main
+
     # Find number of instances of each class
     counted = countInstances(instances, "class", labels)
 
-    # Compute gini index
-    gini = gini_index(len(instances), counted[0], counted[1])
-
-    # Test all possible splits
-
-    for attribute in instances.columns:
-        labels = determineLabels(instances[attribute])
-
-    # Weight branch impurity by empirical branch probability for every possible split
-    # CODE...
+    # Compute current gini index
+    currentGini = gini_index(len(instances), counted[0], counted[1])
+    if (currentGini != 0):                                                                      # line 15 of psuedocode, gini = 0 if all instances are of the same class
+        # Test all possible splits
+        best, second_best = [1, None], [1, None]  # first element is the gini, second element is the corresponding split
+        for attribute in instances.columns:
+            labels = determineLabels(instances[attribute])
+            splits = allSplits(labels)
+            for split in splits:
+                counted = countInstances(instances, "class", labels)  # TODO: change arguments
+                gini = gini_index(len(instances), counted[0],
+                                  counted[1])  # not sure if these are the correct arguments?
+                best, second_best = updateBestGini(best, second_best, [gini, split])
+        best, second_best = updateBestGini(best, second_best, [currentGini, None])
+        print(best)
+        # Weight branch impurity by empirical branch probability for every possible split
+        # if (best[1] != None and best[0]-second_best[0]>epsilon(len(instances), range, delta)): #line 20 of pseudocode
 
 
 def main():
@@ -116,16 +135,17 @@ def main():
     print(instances)
 
     # Something funky going on here
-    print(allSplits(labels))
+    # print(allSplits(labels))
 
-    #print(allSplits(['a', 'b', 'c', 'd']))
+    # print(allSplits(['a', 'b', 'c', 'd']))
 
     # --------------------------------------
 
     # TODO Change input! range(0, 10) just for testing purposes
-    # impurity(data.iloc[range(0, 10)])
+    impurity(data.iloc[range(0, 10)], classes)
 
     # TODO STYLE, uniform naming style for functions. No conform atm
+    # i don't have a preference, feel free to change any names
 
 
 main()
