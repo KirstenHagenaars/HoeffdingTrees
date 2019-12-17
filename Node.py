@@ -4,15 +4,15 @@ class Node:
     self.children = children                        #Array of child nodes, null for leaf node
     self.split_condition = split_condition          #Condition node is split on, null for leaf nodes
 
-  def get_parent(self):
+  def getParent(self):
       return self.parent
 
-  def set_parent(self, x):
+  def setParent(self, x):
       self.parent = x
 
-  def get_children(self):
+  def getChildren(self):
       return self.children
 
-  def split_node(self, condition):
+  def splitNode(self, condition):
       self.split_condition = condition
       #make child nodes

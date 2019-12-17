@@ -9,13 +9,12 @@ data = None
 classes = []
 
 
-def load_data():
+def loadData():
     global data
     data = pd.read_csv("dataset_24_mushroom.csv")  # panda dataframe
-    # print(data.head())
 
 
-def gini_index(total, inClassA, inClassB):
+def giniIndex(total, inClassA, inClassB):
     gini = 1 - ((inClassA / total) ** 2 + (inClassB / total) ** 2)
     if 0 <= gini <= 1:
         return gini
@@ -91,7 +90,7 @@ def impurity(instances, labels):  # labels off 'class', found in the main
     counted = countInstances(instances, "class", labels)
 
     # Compute current gini index
-    currentGini = gini_index(len(instances), counted[0], counted[1])
+    currentGini = giniIndex(len(instances), counted[0], counted[1])                             #line 3 psuedocode
     if (currentGini != 0):                                                                      # line 15 of psuedocode, gini = 0 if all instances are of the same class
         # Test all possible splits
         best, second_best = [1, None], [1, None]  # first element is the gini, second element is the corresponding split
@@ -100,8 +99,8 @@ def impurity(instances, labels):  # labels off 'class', found in the main
             splits = allSplits(labels)
             for split in splits:
                 counted = countInstances(instances, "class", labels)  # TODO: change arguments
-                gini = gini_index(len(instances), counted[0],
-                                  counted[1])  # not sure if these are the correct arguments?
+                gini = giniIndex(len(instances), counted[0],
+                                 counted[1])  # not sure if these are the correct arguments?
                 best, second_best = updateBestGini(best, second_best, [gini, split])
         best, second_best = updateBestGini(best, second_best, [currentGini, None])
         print(best)
@@ -110,12 +109,10 @@ def impurity(instances, labels):  # labels off 'class', found in the main
 
 
 def main():
-    load_data()
-    # HTree.start_tree()
+    loadData()
     global data
     class_labels = data["class"]
     global classes
-
     classes = determineLabels(class_labels)
     print(classes)
 
@@ -134,6 +131,15 @@ def main():
     instances = countInstances(test, "cap-shape", labels)
     print(instances)
 
+    #I start following the pseudocode from here:
+    HT = HTree.startTree()
+    n = []
+    for c in classes:
+        for col in data.columns:
+            for l in labels:
+                n.append(0)
+
+
     # Something funky going on here
     # print(allSplits(labels))
 
@@ -142,7 +148,7 @@ def main():
     # --------------------------------------
 
     # TODO Change input! range(0, 10) just for testing purposes
-    impurity(data.iloc[range(0, 10)], classes)
+    #impurity(data.iloc[range(0, 10)], classes)
 
     # TODO STYLE, uniform naming style for functions. No conform atm
     # i don't have a preference, feel free to change any names
