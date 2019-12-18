@@ -132,13 +132,19 @@ def main():
     print(instances)
 
     #I start following the pseudocode from here:
-    HT = HTree.startTree()
     n = []
     for c in classes:
+        per_class = []
         for col in data.columns:
+            per_column = []
+            labels = determineLabels(test[col])
             for l in labels:
-                n.append(0)
-
+                per_column.append(0)
+            per_class.append(per_column)
+        n.append(per_class)
+    HT = HTree.Tree(n)
+    for instance in test:
+        HT.process(instance, classes, data.columns)
 
     # Something funky going on here
     # print(allSplits(labels))
@@ -149,9 +155,5 @@ def main():
 
     # TODO Change input! range(0, 10) just for testing purposes
     #impurity(data.iloc[range(0, 10)], classes)
-
-    # TODO STYLE, uniform naming style for functions. No conform atm
-    # i don't have a preference, feel free to change any names
-
 
 main()
