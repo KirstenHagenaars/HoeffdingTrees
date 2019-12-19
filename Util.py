@@ -1,3 +1,9 @@
+from itertools import combinations
+from math import ceil
+import math
+import numpy as np
+
+
 def giniIndex(total, inClassA, inClassB):
     gini = 1 - ((inClassA / total) ** 2 + (inClassB / total) ** 2)
     if 0 <= gini <= 1:
@@ -62,7 +68,6 @@ def updateBestGini(best, second_best, new):
     else:
         return best, second_best
 
-
+#TODO test this
 def epsilon(n, R, delta):
     return math.sqrt(pow(R, 2) * math.log1p(1 / delta) / 2 * n)
-

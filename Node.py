@@ -17,13 +17,13 @@ class Node:
 
     def splitNode(self, condition):
         self.split_condition = condition
-        # make child nodes
+        #TODO make child nodes line 21 - 26
 
     def sort(self, instance):
-        # TODO Base which child to pick on split condition
+        # TODO Base which child to pick on split condition line 10
         return self.children[0]
 
     def setLabel(self, classes):
         countClass1 = 0
         #for c in range(0,1):
-            #TODO set label to majority class
+            #TODO set label to majority class line 14
