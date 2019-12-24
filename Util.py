@@ -1,7 +1,6 @@
 from itertools import combinations
 from math import ceil
 import math
-import numpy as np
 
 
 def giniIndex(total, inClassA, inClassB):
@@ -25,6 +24,7 @@ def determineLabels(array):  # Finds the different classes of an attribute
             seen.append(label[1])
     return seen
 
+
 def initialCounter(data, classes, columns):
     n = {}
     for c in classes:
@@ -37,6 +37,7 @@ def initialCounter(data, classes, columns):
             per_class[col] = per_column
         n[c] = per_class
     return n
+
 
 # TODO test/fix this function, it works for odd numbers of labels, there are duplicates when the nr of labels is even
 def allSplits(labels):
@@ -60,7 +61,7 @@ def allSplits(labels):
     return combis
 
 
-def countInstances(instances, attribute, labels):  # Counts the number of instances of diff.classes within an attribute
+def countInstances2(instances, attribute, labels):  # Counts the number of instances of diff.classes within an attribute
     counted = [0 for x in range(0, len(labels))]
 
     for i in range(0, len(instances)):
@@ -80,6 +81,7 @@ def updateBestGini(best, second_best, new):
     else:
         return best, second_best
 
-#TODO test this
+
+# TODO test this
 def epsilon(n, R, delta):
     return math.sqrt(pow(R, 2) * math.log1p(1 / delta) / 2 * n)
