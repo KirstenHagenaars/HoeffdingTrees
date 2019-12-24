@@ -33,25 +33,16 @@ def findBestGinis(instances, labels, currentGini):  # labels off 'class', found 
 def main():
     loadData()
     global data
+
+
+    #classA = classes[0]
+    #classB = classes[1]
+
+    # TEST CODE -------------------------
+    data = data.iloc[range(0, 20)]
     class_labels = data["class"]
     global classes
     classes = Util.determineLabels(class_labels)
-    print(classes)
-
-    classA = classes[0]
-    classB = classes[1]
-
-    # TEST CODE -------------------------
-    test = data.iloc[range(0, 20)]
-    # print(test)
-    # print(test.shape)
-
-    print("determineLabels")
-    labels = Util.determineLabels(test["cap-shape"])
-    print(labels)
-    print("instances")
-    instances = Util.countInstances(test, "cap-shape", labels)
-    print(instances)
 
     # Something funky going on here
     # print(allSplits(labels))
@@ -60,30 +51,25 @@ def main():
 
     # --------------------------------------
     # I start following the pseudocode from here:
-    n = []
-    for c in classes:
-        per_class = []
-        for col in data.columns:
-            per_column = []
-            labels = Util.determineLabels(test[col])
-            for l in labels:
-                per_column.append(0)
-            per_class.append(per_column)
-        n.append(per_class)
-    HT = HTree.Tree(n)
-    for instance in test:
-        currentNode = HT.findLeaf(instance, classes, data.columns)
-        currentNode.setLabel(classes)
+    columns = data.columns.tolist()
+    columns.pop()
+
+    HT = HTree.Tree(Util.initialCounter(data, classes, columns))
+    for i in range(0, int(data.size/len(data.columns))):
+        instance = data.iloc[i]
+        currentNode = HT.findLeaf(instance, classes, columns)
+        currentNode.updateCounter(instance, columns)
+        currentNode.setLabel(data, classes, columns[0])
         # if (currentNode.isPure()):
         # line 15 of psuedocode
         # Find number of instances of each class
-        counted = Util.countInstances(instances, "class", labels)
+        #counted = Util.countInstances(instances, "class", labels)
 
         # Compute current gini index
-        currentGini = Util.giniIndex(len(instances), counted[0], counted[1])  # line 3 psuedocode
-        if (currentGini != 0):  # line 15 of psuedocode, gini = 0 if all instances are of the same class
+        #currentGini = Util.giniIndex(len(instances), counted[0], counted[1])  # line 3 psuedocode
+        #if (currentGini != 0):  # line 15 of psuedocode, gini = 0 if all instances are of the same class
             # Test all possible splits
-            best, second_best = findBestGinis(instances, labels, currentGini)
+            #best, second_best = findBestGinis(instances, labels, currentGini)
             #epsilon = Util.epsilon()   line 19
             #TODO line 19 and up
 

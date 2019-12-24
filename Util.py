@@ -25,6 +25,18 @@ def determineLabels(array):  # Finds the different classes of an attribute
             seen.append(label[1])
     return seen
 
+def initialCounter(data, classes, columns):
+    n = {}
+    for c in classes:
+        per_class = {}
+        for col in columns:
+            per_column = {}
+            labels = determineLabels(data[col])
+            for l in labels:
+                per_column[l] = 0
+            per_class[col] = per_column
+        n[c] = per_class
+    return n
 
 # TODO test/fix this function, it works for odd numbers of labels, there are duplicates when the nr of labels is even
 def allSplits(labels):
