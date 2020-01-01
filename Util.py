@@ -4,6 +4,8 @@ import math
 
 
 def giniIndex(total, inClassA, inClassB):
+    if total == 0:
+        return 0            #TODO not sure if this is a good choice
     gini = 1 - ((inClassA / total) ** 2 + (inClassB / total) ** 2)
     if 0 <= gini <= 1:
         return gini
@@ -37,40 +39,6 @@ def initialCounter(data, classes, columns):
             per_class[col] = per_column
         n[c] = per_class
     return n
-
-
-# TODO test/fix this function, it works for odd numbers of labels, there are duplicates when the nr of labels is even
-def allSplits(labels):
-    combis = []
-    # when the labels are ['x', 'b', 's', 'f'], we do not want [['x', 'b', 's', 'f'],[]] in combis since this is not a split, right?
-    for i in range(1, ceil((len(labels) + 1) / 2)):
-        comb = combinations(labels, i)
-        for j in comb:
-            combine = [list(j)]
-            print(j)
-            partB = []
-            for label in labels:
-                seen = False
-                for p in j:
-                    if p == label:
-                        seen = True
-                if not seen:
-                    partB.append(label)
-            combine.append(partB)
-            combis.append(combine)
-    return combis
-
-
-def countInstances2(instances, attribute, labels):  # Counts the number of instances of diff.classes within an attribute
-    counted = [0 for x in range(0, len(labels))]
-
-    for i in range(0, len(instances)):
-        for label in labels:
-            index = labels.index(label)
-            if instances.iloc[i][attribute][1] == label:
-                counted[index] = counted[index] + 1
-                break
-    return counted
 
 
 def updateBestGini(best, second_best, new):

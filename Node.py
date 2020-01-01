@@ -2,29 +2,30 @@ import Util
 
 
 class Node:
-    def __init__(self, parent, children, split_condition, counter, label):
-        self.parent = parent  # The parent node of this node, null for root node, leave this out?
-        self.children = children  # Array of child nodes, null for leaf node, TODO only 2 children?
-        self.split_condition = split_condition  # Condition node is split on, null for leaf nodes
+    def __init__(self, counter, label):
+        self.children = []  # Array of child nodes, null for leaf node
+        self.split_condition = None  # attribute node is split on, null for leaf nodes
         self.counter = counter  # Keeps track of amount of instances and their values that are at this node, n from the psuedocode
         self.label = label  # Majority class at this node
-
-    def getParent(self):
-        return self.parent
-
-    def setParent(self, x):
-        self.parent = x
+        self.labels_split = None  # labels of split_condition
 
     def getChildren(self):
         return self.children
 
-    def splitNode(self, bestSplit):
+    def splitNode(self, bestSplit, data, classes, columns):
         self.split_condition = bestSplit[1]
-        giniKids = bestSplit[0]
-        # TODO make child nodes line 21 - 26 use Util.initialCounter
+        self.labels_split = Util.determineLabels(data[self.split_condition])
+        initial_n = Util.initialCounter(data, classes, columns)
+        print("split on " + self.split_condition)
+        for l in range(0, len(self.labels_split)):
+            self.children.append(Node(initial_n, None))
+        # TODO gini of childs
 
     def sort(self, instance):
-        # TODO Base which child to pick on split condition line 10
+        for l in range(0, len(self.labels_split)):
+            if instance[self.split_condition][1] == self.labels_split[l]:
+                return self.children[l]
+        print("something wrong")
         return self.children[0]
 
     def updateCounter(self, instance, columns):
@@ -44,4 +45,13 @@ class Node:
             labels = Util.determineLabels(data[column])
             for l in labels:
                 countClass[c] += self.counter[classes[c]][column][l]
+        return countClass
+
+    def countInstancesForSplit(self, labels, classes, column):
+        countClass = []
+        for c in range(0, 2):
+            countColumn = []
+            for l in range(0, len(labels)):
+                countColumn.append(self.counter[classes[c]][column][labels[l]])
+            countClass.append(countColumn)
         return countClass
