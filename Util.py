@@ -1,11 +1,10 @@
-from itertools import combinations
-from math import ceil
 import math
 
 
 def giniIndex(total, inClassA, inClassB):
+    # Returns the gini index
     if total == 0:
-        return 0            #TODO not sure if this is a good choice
+        return 1
     gini = 1 - ((inClassA / total) ** 2 + (inClassB / total) ** 2)
     if 0 <= gini <= 1:
         return gini
@@ -14,10 +13,12 @@ def giniIndex(total, inClassA, inClassB):
         return 0
 
 
-def determineLabels(array):  # Finds the different classes of an attribute
+def determineLabels(array):
+    # Finds the different labels of an attribute
     seen = []
-
     for label in array:
+        if len(label) != 3:
+            print("Invalid value detected")
         there = False
         for s in seen:
             if s == label[1]:
@@ -28,6 +29,7 @@ def determineLabels(array):  # Finds the different classes of an attribute
 
 
 def initialCounter(data, classes, columns):
+    # Creates the initial counter of a node, called n in psuedocode
     n = {}
     for c in classes:
         per_class = {}
@@ -42,6 +44,7 @@ def initialCounter(data, classes, columns):
 
 
 def updateBestGini(best, second_best, new):
+    # Sets best to the lowest gini out of the three arguments and sets second_best to the second to lowest gini
     if new[0] < best[0]:
         return new, best
     if new[0] < second_best[0]:
@@ -50,6 +53,6 @@ def updateBestGini(best, second_best, new):
         return best, second_best
 
 
-# TODO test this
 def epsilon(n, R, delta):
+    # Calculates the value for epsilon, explanation in report
     return math.sqrt(pow(R, 2) * math.log1p(1 / delta) / 2 * n)
