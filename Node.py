@@ -9,10 +9,11 @@ class Node:
         self.label = label              # Majority class at this node
         self.labels_split = None        # Labels of split_condition
 
-    def splitNode(self, bestSplit, data, classes, columns):
+    def splitNode(self, bestSplit, data, classes, columns, labels):
         # Splits node on attribute in bestSplit
+        print("split")
         self.split_condition = bestSplit[1]
-        self.labels_split = Util.determineLabels(data[self.split_condition])
+        self.labels_split = labels[self.split_condition]
         initial_n = Util.initialCounter(data, classes, columns)
         count = self.countInstancesForSplit(self.labels_split, classes, self.split_condition)
         for l in range(0, len(self.labels_split)):
@@ -25,7 +26,7 @@ class Node:
     def sort(self, instance):
         # Returns child node instance should be sorted into
         for l in range(0, len(self.labels_split)):
-            if instance[self.split_condition][1] == self.labels_split[l]:
+            if instance[self.split_condition] == self.labels_split[l]:
                 return self.children[l]
         print("something wrong")
         return self.children[0]
@@ -33,21 +34,21 @@ class Node:
     def updateCounter(self, instance, columns):
         # Process instance by updating counter
         for x in range(0, len(columns)):
-            self.counter[instance[len(columns)][1]][columns[x]][instance[columns[x]][1]] += 1
+            self.counter[instance[len(columns)]][columns[x]][instance[columns[x]]] += 1
 
-    def setLabel(self, data, classes, column):
+    def setLabel(self, data, classes, column, labels):
         # Sets label to majority class
-        countClass = self.countInstances(data, classes, column)
+        countClass = self.countInstances(data, classes, column, labels)
         if countClass[0] > countClass[1]:
             self.label = classes[0]
         else:
             self.label = classes[1]
 
-    def countInstances(self, data, classes, column):
+    def countInstances(self, data, classes, column, Labels):
         # Returns array containing the amounts of instances at node from each class
         countClass = [0, 0]
         for c in range(0, 2):
-            labels = Util.determineLabels(data[column])
+            labels = Labels[column]
             for l in labels:
                 countClass[c] += self.counter[classes[c]][column][l]
         return countClass

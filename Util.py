@@ -17,15 +17,23 @@ def determineLabels(array):
     # Finds the different labels of an attribute
     seen = []
     for label in array:
-        if len(label) != 3:
-            print("Invalid value detected")
+        # if len(label) != 3:
+        #     #print(array)
+        #     print("Invalid value detected")
         there = False
         for s in seen:
-            if s == label[1]:
+            if s == label:
                 there = True
         if not there:
-            seen.append(label[1])
+            seen.append(label)
     return seen
+
+
+def getAllLabels(data, columns):
+    result = {}
+    for col in columns:
+        result[col] = determineLabels(data[col])
+    return result
 
 
 def initialCounter(data, classes, columns):
