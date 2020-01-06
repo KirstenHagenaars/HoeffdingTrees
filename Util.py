@@ -63,4 +63,4 @@ def updateBestGini(best, second_best, new):
 
 def epsilon(n, R, delta):
     # Calculates the value for epsilon, explanation in report
-    return math.sqrt(pow(R, 2) * math.log1p(1 / delta) / 2 * n)
+    return math.sqrt((pow(R, 2) * math.log1p(1 / delta)) / (2 * n))

@@ -40,11 +40,9 @@ def HoeffdingTree(columns, delta):
         counted = currentNode.countInstances(data, classes, columns[0], allLabels)
         total = counted[0] + counted[1]
         currentGini = Util.giniIndex(total, counted[0], counted[1])
-        print(currentGini)
         if currentGini != 0.0:
             best, second_best = findBestGinis(currentNode, currentGini, columns)
-            epsilon = 0 #Util.epsilon(total, 0.1, delta) #TODO what is the R?
-            if best[1] is not None and second_best[0] - best[0] > epsilon:
+            if best[1] is not None and second_best[0] - best[0] > Util.epsilon(total, len(allLabels[best[1]]), delta):
                 currentNode.splitNode(best, data, classes, columns, allLabels)
     return HT
 
@@ -53,7 +51,7 @@ def main(delta):
     # Calculate the accuracy of the predictions when creating a Hoeffding Tree using the value delta
     loadData()
     global allData
-    allData = allData.iloc[range(0, 1000)]
+    allData = allData.iloc[range(0, 100000)]
     print("Algorithm starts")
     class_labels = allData["class"]
     global classes
