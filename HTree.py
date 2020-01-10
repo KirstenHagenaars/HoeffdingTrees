@@ -4,13 +4,15 @@ import Node
 class Tree:
 
     def __init__(self, n):
-        self.root = Node.Node(None, None, None, n, None)  # root
+        self.root = Node.Node(n, None)  # Root of the Hoeffding Tree
 
-    def process(self, instance, classes, columns):
-        # TODO psuedocode from line 10 until the end
+    def findLeaf(self, instance):
+        # Returns leaf node instance gets sorted into
         currentNode = self.root
         while currentNode.split_condition is not None:
             currentNode = currentNode.sort(instance)
-        currentNode.setLabel(classes)
-        #if (currentNode.isPure()):
-            #line 15 of psuedocode
+        return currentNode
+
+    def predict(self, instance):
+        # Returns predicted class of instance
+        return self.findLeaf(instance).label
